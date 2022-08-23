@@ -2,12 +2,9 @@ package com.example.wineshop.entity;
 
 import javax.persistence.*;
 
-<<<<<<< HEAD
+
 @Entity
 @Table(name = "region")
-=======
-
->>>>>>> f97cfb5 (CRUT type)
 public class Region {
     //Integer id, String name, String country
 
