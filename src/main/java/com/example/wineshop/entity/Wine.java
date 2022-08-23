@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Wine {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     
     String name;

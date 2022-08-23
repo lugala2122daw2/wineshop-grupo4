@@ -29,7 +29,7 @@ public class WineController {
         return wineService.findWines();
     }
 
-    @PostMapping("/api/wine/")
+    @PostMapping("/api/wine")
     public Wine createNewWine(@RequestBody Wine wine){
         wineService.createWine(wine);
         return wine;
