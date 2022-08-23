@@ -1,6 +1,9 @@
 package com.example.wineshop.entity;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Wine {
@@ -17,10 +20,22 @@ public class Wine {
     String body;
     String acidity;
 
+    @ManyToOne
+    @JoinColumn(name="winery_id")
+    Winery winery;
+
+
+//Integer type_id;
+
+    @ManyToOne
+    @JoinColumn(name="region_id")
+    Region region;
+
     public Wine() {
+
     }
 
-    public Wine(int id, String name, String year, float rating, int num_reviews, float price, String body, String acidity) {
+    public Wine(int id, String name, String year, float rating, int num_reviews, float price, String body, String acidity, Winery winery, Region region) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -29,6 +44,8 @@ public class Wine {
         this.price = price;
         this.body = body;
         this.acidity = acidity;
+        this.winery = winery;
+        this.region = region;
     }
 
     public int getId() {
@@ -94,5 +111,36 @@ public class Wine {
     public void setAcidity(String acidity) {
         this.acidity = acidity;
     }
-    
+
+    public Winery getWinery() {
+        return winery;
+    }
+
+    public void setWinery(Winery winery) {
+        this.winery = winery;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    @Override
+    public String toString() {
+        return "Wine{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", year='" + year + '\'' +
+                ", rating=" + rating +
+                ", num_reviews=" + num_reviews +
+                ", price=" + price +
+                ", body='" + body + '\'' +
+                ", acidity='" + acidity + '\'' +
+                ", winery=" + winery +
+                ", region=" + region +
+                '}';
+    }
 }
