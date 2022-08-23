@@ -30,6 +30,11 @@ create table wine
     id        integer auto_increment primary key,
     name      varchar(255),
     year      varchar(255),
+    rating    float,
+    num_reviews integer,
+    price     float,
+    body      varchar(255),
+    acidity   varchar(255),
     winery_id integer references winery (id),
     type_id   integer references type (id),
     region_id integer references region (id)
@@ -40,6 +45,11 @@ insert into wine
 select w.id      as id,
        w.wine    as name,
        w.year    as year,
+       w.rating  as rating,
+       w.num_reviews as num_reviews,
+       w.price   as price,
+       w.body    as body,
+       w.acidity as acidity,
        winery.id as winery_id,
        type.id   as type_id,
        region.id as region_id
