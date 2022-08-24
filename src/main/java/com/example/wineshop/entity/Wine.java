@@ -21,7 +21,6 @@ public class Wine {
     @JoinColumn(name="winery_id")
     Winery winery;
 
-
     @ManyToOne
     @JoinColumn(name="type_id")
     Type type;
