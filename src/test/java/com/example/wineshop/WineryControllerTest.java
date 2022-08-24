@@ -2,6 +2,7 @@ package com.example.wineshop;
 
 import com.example.wineshop.controller.WineryController;
 import com.example.wineshop.entity.Winery;
+import com.example.wineshop.service.WineryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class WineryControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private WineryController wineryController;
+    private WineryService wineryService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,14 +58,13 @@ class WineryControllerTest {
         winery.setId(id);
         winery.setName("Teso La Monja");
 
-        given(wineryController.retrieveWinery(id)).willReturn(winery);
+        given(wineryService.findOne(id)).willReturn(Optional.of(winery));
         ResultActions response = mockMvc.perform(get("/api/winery/{id}", id));
 
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.id",is(winery.getId())))
                 .andExpect(jsonPath("$.name",is(winery.getName())));
-
 
     }
 
@@ -74,7 +74,7 @@ class WineryControllerTest {
 
         List<Winery> listOfWinery = new ArrayList<>();
         listOfWinery.add(new Winery());
-        given(wineryController.retireveAllWinery()).willReturn(listOfWinery);
+        given(wineryService.findAll()).willReturn(listOfWinery);
 
         ResultActions response = mockMvc.perform(get("/api/winery"));
 
@@ -89,7 +89,7 @@ class WineryControllerTest {
     void createWinery() throws Exception {
         Winery winery = new Winery();
         winery.setName("Test");
-        given(wineryController.createWinery(any(Winery.class))).willAnswer((invocation)->invocation.getArgument(0));
+        given(wineryService.save(any(Winery.class))).willAnswer((invocation)->invocation.getArgument(0));
 
         ResultActions response = mockMvc.perform(post("/api/winery")
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(winery)));
@@ -104,10 +104,12 @@ class WineryControllerTest {
     void updateWinery() throws Exception {
         Winery savedWinery = new Winery();
         savedWinery.setName("Test");
+
         Winery updatedWinery = new Winery();
         updatedWinery.setName("Test1");
-        given(wineryController.retrieveWinery(1)).willReturn(savedWinery);
-        given(wineryController.updateWinery(1,updatedWinery)).willAnswer((invocation)->invocation.getArgument(0));
+
+        given(wineryService.findOne(1)).willReturn(Optional.of(savedWinery));
+        given(wineryService.save(updatedWinery)).willAnswer((invocation)->invocation.getArgument(0));
 
         ResultActions response = mockMvc.perform(put("/api/winery/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,8 +121,38 @@ class WineryControllerTest {
     @Test
     void deleteWinery() throws Exception {
         Integer wineryId=1;
-        given(wineryController.deleteWinery(wineryId)).willReturn(new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK));
+        willDoNothing().given(wineryService).delete(wineryId);
+
         ResultActions response = mockMvc.perform(delete("/api/winery/{id}",wineryId));
         response.andExpect(status().isOk()).andDo(print());
     }
+
+    @Test
+    void invalid_Id_GetById() throws Exception {
+        Integer invalid_id=-1;
+        given(wineryService.findOne(invalid_id)).willReturn(Optional.empty());
+        ResultActions response = mockMvc.perform(get("/api/winery/{id}", invalid_id));
+        response.andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
+    void invalid_Id_Update() throws Exception{
+        Integer invalid_id=-1;
+        Winery savedWinery = new Winery();
+        savedWinery.setName("Test");
+
+        Winery updatedWinery = new Winery();
+        updatedWinery.setName("Test1");
+
+        given(wineryService.findOne(invalid_id)).willReturn(Optional.empty());
+        given(wineryService.save(updatedWinery)).willAnswer((invocation)->invocation.getArgument(0));
+
+        ResultActions response = mockMvc.perform(put("/api/winery/{id}", invalid_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedWinery)));
+
+        response.andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
 }
