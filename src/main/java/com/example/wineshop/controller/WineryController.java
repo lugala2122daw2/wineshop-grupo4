@@ -3,6 +3,7 @@ package com.example.wineshop.controller;
 import com.example.wineshop.entity.Winery;
 import com.example.wineshop.service.WineryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +48,15 @@ public class WineryController {
 
         final Winery newWinery = wineryService.save(oldWinery);
 
+
         return ResponseEntity.ok(newWinery);
     }
 
     //Delete
     @DeleteMapping("/api/winery/{id}")
-    public Map<String,Boolean> deleteUser(@PathVariable int id){
-
-        return wineryService.delete(id);
+    public ResponseEntity<String> deleteWinery(@PathVariable int id){
+        wineryService.delete(id);
+        return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);
     }
 
 
