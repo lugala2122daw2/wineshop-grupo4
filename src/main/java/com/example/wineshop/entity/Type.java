@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "type")
 public class Type {
 
     @Id
@@ -12,7 +11,7 @@ public class Type {
     private int id;
     private String name;
 
-    public Type (int id){
+    public Type (int id, String name){
         this.id=id;
     }
 
@@ -24,7 +23,7 @@ public class Type {
         return id;
     }
 
-    public void getId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
