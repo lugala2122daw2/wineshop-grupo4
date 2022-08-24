@@ -57,7 +57,7 @@ public class WineryController {
     }
 
     //Delete
-    @DeleteMapping("/api/winery/{id}")
+    @DeleteMapping("/api/delete/winery/{id}")
     public ResponseEntity<String> deleteWinery(@PathVariable int id){
         wineryService.delete(id);
         return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);

@@ -1,5 +1,7 @@
 package com.example.wineshop.entity;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 
 
@@ -11,7 +13,9 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotNull
     private String name;
+    @NotNull
     private String country;
 
     public Region() {

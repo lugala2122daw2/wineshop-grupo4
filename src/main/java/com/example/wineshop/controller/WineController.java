@@ -40,7 +40,7 @@ public class WineController {
         return wineService.updateWine(id, nWine);
     }
 
-    @DeleteMapping("/api/wine/{id}")
+    @DeleteMapping("/api/delete/wine/{id}")
     public String deleteWine(@PathVariable int id){
         wineService.deleteWine(id);
         return "Se ha eliminado el vino con id: " + id;

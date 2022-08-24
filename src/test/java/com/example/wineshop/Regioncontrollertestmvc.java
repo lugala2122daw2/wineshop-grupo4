@@ -84,4 +84,48 @@ public class Regioncontrollertestmvc {
 
     }
 
+    //Unexisting region
+    @Test
+    @WithMockUser
+    void FindRegionInvalidId() throws Exception {
+
+        mockMvc.perform(get("/api/region/100")
+                        .contentType(MediaType.APPLICATION_JSON))
+                //Expect 404 Not Found
+                .andExpect(status().isNotFound());
+
+    }
+
+    //Unexisting update ID
+    @Test
+    @WithMockUser
+    void UpdateRegionInvalidId() throws Exception {
+
+        Region region = new Region();
+        region.setId(100);
+        region.setName("Test");
+        region.setCountry("Spain");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(region);
+        mockMvc.perform(put("/api/region/100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                //Expect 404 Not Found
+                .andExpect(status().isNotFound());
+
+    }
+
+    //Unexisting delete ID
+    @Test
+    @WithMockUser
+    void DeleteRegionInvalidId() throws Exception {
+
+        mockMvc.perform(delete("/api/region/100")
+                        .contentType(MediaType.APPLICATION_JSON))
+                //Expect 404 Not Found
+                .andExpect(status().isNotFound());
+
+    }
+
+
 }

@@ -48,7 +48,7 @@ public class TypeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/api/type/{id}")
+    @DeleteMapping("/api/delete/type/{id}")
     public ResponseEntity<String> deleteType(@PathVariable int id){
         typeService.deleteType(id);
 

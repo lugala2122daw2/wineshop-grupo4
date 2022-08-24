@@ -3,8 +3,10 @@ package com.example.wineshop.controller;
 import com.example.wineshop.entity.Region;
 import com.example.wineshop.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 
@@ -20,7 +22,6 @@ public class RegionController {
 
         return region;
     }
-
     @GetMapping("/api/region") //Funciona
     public List<Region> retrieveAllRegions(){
         return regionService.findAll();
@@ -30,9 +31,10 @@ public class RegionController {
         return regionService.save(region);
     }
 
-     @DeleteMapping("/api/region/{id}") //Funciona
+
+    @DeleteMapping("/api/delete/region/{id}") //Funciona
     public void deleteRegion(@PathVariable int id) {
-         regionService.delete(id);
+        regionService.delete(id);
      }
 
      @PutMapping("/api/region/{id}") //Funciona
