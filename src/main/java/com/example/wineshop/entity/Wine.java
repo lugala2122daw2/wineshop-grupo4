@@ -1,7 +1,6 @@
 package com.example.wineshop.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Wine {
@@ -120,20 +119,20 @@ public class Wine {
         this.winery = winery;
     }
 
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
     public Type getType() {
         return type;
     }
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     @Override
@@ -152,4 +151,5 @@ public class Wine {
                 ", region=" + region +
                 '}';
     }
+
 }
