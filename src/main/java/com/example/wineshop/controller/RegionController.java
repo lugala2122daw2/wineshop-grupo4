@@ -1,13 +1,12 @@
 package com.example.wineshop.controller;
 
 import com.example.wineshop.entity.Region;
-import com.example.wineshop.repository.RegionRepository;
 import com.example.wineshop.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 public class RegionController {
