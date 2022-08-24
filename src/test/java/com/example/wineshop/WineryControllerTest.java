@@ -51,10 +51,21 @@ class WineryControllerTest {
     @Test
     @WithMockUser
     void retrieveWinery() throws Exception {
-        mockMvc.perform(get("/api/winery/1")
-                .contentType("application/json")
-        )       .andExpect(jsonPath("$.id",is(1)))
-                .andExpect(jsonPath("$.name",is("Teso La Monja")));
+
+        Integer id=1;
+        Winery winery = new Winery();
+        winery.setId(id);
+        winery.setName("Teso La Monja");
+
+        given(wineryController.retrieveWinery(id)).willReturn(winery);
+        ResultActions response = mockMvc.perform(get("/api/winery/{id}", id));
+
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id",is(winery.getId())))
+                .andExpect(jsonPath("$.name",is(winery.getName())));
+
+
     }
 
     @Test
