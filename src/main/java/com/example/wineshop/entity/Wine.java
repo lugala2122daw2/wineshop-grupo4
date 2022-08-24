@@ -1,32 +1,59 @@
 package com.example.wineshop.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Range;
 
 @Entity
 public class Wine {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    
+
+    @NotNull(message = "Name cant be null")
     String name;
+
+    @NotNull(message = "Year cant be null")
+    @Range(min = 1990, max = 2022)
     String year;
+
+    @NotNull(message = "Rating cant be null")
+    @Range(min = 0, max = 5)
     float rating;
+
+    @NotNull(message = "Num reviews cant be null")
+    @Min(value = 0)
     int num_reviews;
+
+    @NotNull(message = "Price cant be null")
+    @Min(value = 0)
     float price;
+
+    @NotNull(message = "Body cant be null")
+    @Range(min = 1, max = 5)
     String body;
+
+    @NotNull(message = "Acidity cant be null")
+    @Range(min = 1, max = 5)
     String acidity;
 
     @ManyToOne
     @JoinColumn(name="winery_id")
+    @NotBlank(message = "Winery cant be null")
     Winery winery;
 
     @ManyToOne
     @JoinColumn(name="type_id")
+    @NotBlank(message = "Type cant be null")
     Type type;
 
     @ManyToOne
     @JoinColumn(name="region_id")
+    @NotBlank(message = "Region cant be null")
     Region region;
 
     public Wine() {
