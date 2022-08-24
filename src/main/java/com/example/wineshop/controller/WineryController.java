@@ -20,11 +20,13 @@ public class WineryController {
 
     //Read
     @GetMapping("/api/winery/{id}")
-    public Winery retrieveWinery(@PathVariable int id){
-        Winery winery= wineryService.findOne(id);
+    public ResponseEntity<Winery> retrieveWinery(@PathVariable int id){
 
 
-        return winery;
+
+        return wineryService.findOne(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     //Read
@@ -42,14 +44,18 @@ public class WineryController {
     //Update
     @PutMapping("/api/winery/{id}")
     public ResponseEntity<Winery> updateWinery(@PathVariable int id, @RequestBody Winery winery){
-        Winery oldWinery = wineryService.findOne(id);
 
-        oldWinery.setName(winery.getName());
+        return wineryService.findOne(id)
+                .map(savedWinery -> {
 
-        final Winery newWinery = wineryService.save(oldWinery);
+                    savedWinery.setName(winery.getName());
+                    savedWinery.setId(winery.getId());
 
+                    Winery updatedWinery = wineryService.save(savedWinery);
+                    return new ResponseEntity<>(updatedWinery, HttpStatus.OK);
 
-        return ResponseEntity.ok(newWinery);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     //Delete
@@ -58,6 +64,7 @@ public class WineryController {
         wineryService.delete(id);
         return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);
     }
+
 
 
 }
