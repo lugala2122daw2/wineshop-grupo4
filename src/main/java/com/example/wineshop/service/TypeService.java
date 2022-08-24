@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TypeService {
@@ -13,8 +14,8 @@ public class TypeService {
     @Autowired
     private TypeRepository typeRepository;
 
-    public Type findOne(Integer id){
-        return typeRepository.findById(id).get();
+    public Optional<Type> findOne(Integer id){
+        return typeRepository.findById(id);
     }
 
     public List<Type> findTypes(){
@@ -25,11 +26,9 @@ public class TypeService {
         return typeRepository.save(type);
     }
 
-    public Type updateType(int id, Type nType){
+    public Type updateType(Type updatedType){
 
-        Type type = findOne(id);
-        type.setName(nType.getName());
-        return typeRepository.save(type);
+        return typeRepository.save(updatedType);
     }
 
     public void deleteType(int id){

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "type")
 public class Type {
 
     @Id
@@ -13,11 +12,14 @@ public class Type {
     private String name;
 
     public Type (int id, String name){
+<<<<<<< HEAD
         this.id=id;
         this.name=name;
     }
 
     public Type (int id){
+=======
+>>>>>>> 5affcd3 (Type testing)
         this.id=id;
     }
 
@@ -29,7 +31,7 @@ public class Type {
         return id;
     }
 
-    public void getId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

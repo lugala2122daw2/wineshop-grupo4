@@ -3,6 +3,8 @@ package com.example.wineshop.controller;
 import com.example.wineshop.entity.Type;
 import com.example.wineshop.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +16,14 @@ public class TypeController {
     private TypeService typeService;
 
     @GetMapping("/api/type/{id}")
-    public Type retrieveType(@PathVariable int id) {
-        return typeService.findOne(id);
+    public ResponseEntity<Type> retrieveType(@PathVariable int id) {
+        return typeService.findOne(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/api/type")
-    public List<Type> getWines(){
+    public List<Type> getTypes(){
         return typeService.findTypes();
     }
 
@@ -30,14 +34,25 @@ public class TypeController {
     }
 
     @PutMapping("/api/type/{id}")
-    public Type updateType(@PathVariable int id, @RequestBody Type nType){
-        return typeService.updateType(id, nType);
+    public ResponseEntity<Type> updateType(@PathVariable int id, @RequestBody Type nType){
+        return typeService.findOne(id)
+                .map(savedType -> {
+
+                    savedType.setName(nType.getName());
+                    savedType.setId(nType.getId());
+
+                    Type updatedType = typeService.updateType(savedType);
+                    return new ResponseEntity<>(updatedType, HttpStatus.OK);
+
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/api/type/{id}")
-    public String deleteType(@PathVariable int id){
+    public ResponseEntity<String> deleteType(@PathVariable int id){
         typeService.deleteType(id);
-        return "Eliminado el tipo de vino con id: " + id;
+
+        return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);
     }
 
 }
