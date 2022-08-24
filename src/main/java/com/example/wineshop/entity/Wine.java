@@ -1,7 +1,6 @@
 package com.example.wineshop.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Wine {
@@ -23,7 +22,9 @@ public class Wine {
     Winery winery;
 
 
-//Integer type_id;
+    @ManyToOne
+    @JoinColumn(name="type_id")
+    Type type;
 
     @ManyToOne
     @JoinColumn(name="region_id")
@@ -33,7 +34,7 @@ public class Wine {
 
     }
 
-    public Wine(int id, String name, String year, float rating, int num_reviews, float price, String body, String acidity, Winery winery, Region region) {
+    public Wine(int id, String name, String year, float rating, int num_reviews, float price, String body, String acidity, Winery winery, Type type, Region region) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -43,6 +44,7 @@ public class Wine {
         this.body = body;
         this.acidity = acidity;
         this.winery = winery;
+        this.type = type;
         this.region = region;
     }
 
@@ -118,6 +120,14 @@ public class Wine {
         this.winery = winery;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public Region getRegion() {
         return region;
     }
@@ -138,7 +148,9 @@ public class Wine {
                 ", body='" + body + '\'' +
                 ", acidity='" + acidity + '\'' +
                 ", winery=" + winery +
+                ", type=" + type +
                 ", region=" + region +
                 '}';
     }
+
 }
