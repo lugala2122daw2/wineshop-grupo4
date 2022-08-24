@@ -1,7 +1,5 @@
 package com.example.wineshop.entity;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import javax.persistence.*;
 import java.util.List;
 

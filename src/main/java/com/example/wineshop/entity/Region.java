@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 
 @Entity
+@Table(name = "region")
 public class Region {
     //Integer id, String name, String country
 
