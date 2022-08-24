@@ -8,14 +8,15 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class WineryService {
     @Autowired
     private WineryRepository wineryRepository;
 
-    public Winery findOne(Integer id){
-        return wineryRepository.findById(id).get();
+    public Optional<Winery> findOne(Integer id){
+        return wineryRepository.findById(id);
     }
 
     public List<Winery> findAll(){
@@ -26,10 +27,8 @@ public class WineryService {
         return wineryRepository.save(winery);
     }
 
-    public Map<String,Boolean> delete(int id){
+    public void delete(int id){
         wineryRepository.deleteById(id);
-        Map<String,Boolean> response =new HashMap<>();
-        response.put("deleted",Boolean.TRUE);
-        return response;
+
     }
 }
