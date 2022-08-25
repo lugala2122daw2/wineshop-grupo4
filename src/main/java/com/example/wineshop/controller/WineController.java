@@ -43,7 +43,7 @@ public class WineController {
         return wineService.updateWine(id, nWine);
     }
 
-    @DeleteMapping("/api/delete/wine/{id}")
+    @DeleteMapping("/api/wine/{id}")
     public ResponseEntity<String> deleteWine(@PathVariable int id){
         wineService.deleteWine(id);
         return new ResponseEntity<String>("Se ha eliminado el vino con id: " + id, HttpStatus.OK);

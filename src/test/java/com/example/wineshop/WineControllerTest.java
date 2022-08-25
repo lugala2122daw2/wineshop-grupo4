@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;
 
 import com.example.wineshop.entity.*;
-import com.example.wineshop.repository.WineRepository;
 import com.example.wineshop.service.*;
 import com.fasterxml.jackson.databind.*;
 
