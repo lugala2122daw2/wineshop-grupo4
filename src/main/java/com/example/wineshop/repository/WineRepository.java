@@ -1,5 +1,6 @@
 package com.example.wineshop.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,9 @@ import java.util.List;
 
 @Repository
 public interface WineRepository extends JpaRepository<Wine, Integer>{
-    List<Wine> findTop10ByOrderByRatingDesc();
+    List<Wine> findAllByOrderByRatingDesc(Pageable pageable);
+    List<Wine> findAllByOrderByPriceDesc(Pageable pageable);
+
 
 
 
