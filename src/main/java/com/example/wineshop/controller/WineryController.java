@@ -5,6 +5,7 @@ import com.example.wineshop.service.WineryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class WineryController {
     }
 
     //Read
+
     @GetMapping("/api/winery")
     public List<Winery> retireveAllWinery(){
         return wineryService.findAll();
@@ -57,7 +59,7 @@ public class WineryController {
     }
 
     //Delete
-    @DeleteMapping("/api/delete/winery/{id}")
+    @DeleteMapping("/api/winery/{id}")
     public ResponseEntity<String> deleteWinery(@PathVariable int id){
         wineryService.delete(id);
         return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);

@@ -32,7 +32,7 @@ public class RegionController {
     }
 
 
-    @DeleteMapping("/api/delete/region/{id}") //Funciona
+    @DeleteMapping("/api/region/{id}") //Funciona
     public void deleteRegion(@PathVariable int id) {
         regionService.delete(id);
      }
