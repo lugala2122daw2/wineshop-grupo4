@@ -35,7 +35,7 @@ public class WineController {
 
     @PostMapping("/api/wine")
     public ResponseEntity<Wine> createNewWine(@RequestBody Wine wine){
-        return wineService.createWine(wine);        
+        return new ResponseEntity<>(wineService.createWine(wine), HttpStatus.OK);
     }
 
     @PutMapping("/api/wine/{id}")

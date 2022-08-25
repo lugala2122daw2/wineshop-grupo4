@@ -25,9 +25,8 @@ public class WineService {
         return wineRepository.findAll();
     }
     
-    public ResponseEntity<Wine> createWine(Wine wine){
-        wineRepository.save(wine);
-        return new ResponseEntity<>(wine, HttpStatus.OK);
+    public Wine createWine(Wine wine){
+        return wineRepository.save(wine);
     }
 
     public ResponseEntity<Wine> updateWine(int id, Wine nWine){
