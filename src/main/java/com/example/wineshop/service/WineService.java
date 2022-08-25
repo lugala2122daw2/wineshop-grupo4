@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,4 +53,25 @@ public class WineService {
         wineRepository.deleteById(id);
     }
 
+    public List<Wine> findTopNByRating(Integer top) {
+
+        return wineRepository.findAllByOrderByRatingDesc(PageRequest.of(0,top));
+    }
+
+    public List<Wine> findTopNByExpensive(Integer top) {
+        return wineRepository.findAllByOrderByPriceDesc(PageRequest.of(0,top));
+    }
+
+    public List<Wine> findTopNByBang(Integer top) {
+        Page<Wine> listOfWines =wineRepository.findAll(PageRequest.of(0,top,Sort.by("price").ascending().and(Sort.by("rating").descending())));
+
+        return listOfWines.getContent();
+
+    }
+
+    public List<Wine> findTopNByVintage(Integer top) {
+        Page<Wine> listOfWines =wineRepository.findAll(PageRequest.of(0,top,Sort.by("year").ascending().and(Sort.by("rating").descending())));
+
+        return listOfWines.getContent();
+    }
 }
