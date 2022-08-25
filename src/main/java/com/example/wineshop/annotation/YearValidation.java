@@ -6,7 +6,7 @@ import static java.lang.annotation.ElementType.*;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Target( {TYPE, ANNOTATION_TYPE} )
+@Target({ TYPE, METHOD, PARAMETER, FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CompareYearValidator.class)
 @Documented

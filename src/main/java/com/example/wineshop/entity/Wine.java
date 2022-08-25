@@ -5,7 +5,7 @@ import javax.validation.constraints.*;
 
 import org.hibernate.validator.constraints.Range;
 
-import com.example.wineshop.annotation.YearValidation;
+import com.example.wineshop.annotation.*;
 
 @Entity
 public class Wine {
@@ -18,6 +18,7 @@ public class Wine {
     String name;
 
     @NotBlank
+    @YearValidation(minYear = "1900")
     String year;
 
     @NotNull
