@@ -1,30 +1,26 @@
 package com.example.wineshop;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.*;
+import org.springframework.boot.test.context.*;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.*;
 
-import com.example.wineshop.entity.Winery;
-import com.example.wineshop.service.WineService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.wineshop.entity.Region;
-import com.example.wineshop.entity.Type;
-import com.example.wineshop.entity.Wine;
+import com.example.wineshop.entity.*;
+import com.example.wineshop.service.*;
+import com.fasterxml.jackson.databind.*;
 
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 import static org.hamcrest.Matchers.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
@@ -46,8 +42,15 @@ public class WineControllerTest {
 
     @Test
     void retrieveAllWine() throws Exception {
-        mockMvc.perform(get("/api/wine/")
-            .contentType(MediaType.APPLICATION_JSON));
+        List<Wine> wines = new ArrayList<>();
+        wines.add(new Wine());
+        given(wineService.findWines()).willReturn(wines);
+
+        ResultActions response = mockMvc.perform(get("/api/winery"));
+
+        response.andExpect(status().isOk())
+                        .andDo(print())
+                        .andExpect(jsonPath("$.size()",is(wines.size())));
     }
 
     @Test
@@ -65,29 +68,36 @@ public class WineControllerTest {
     @Test
     @WithMockUser
     void createWine() throws Exception{
-        mockMvc.perform(post("/api/wine/")
-            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wine)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("Deiu"))
-            .andExpect(jsonPath("$.year").value("2010"));
+        given(wineService.createWine(wine)).willAnswer((invocation)->invocation.getArgument(0));
+
+        ResultActions response = mockMvc.perform(post("/api/winery")
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(winery)));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Deiu")))
+                .andExpect(jsonPath("$.year").value("2010"));
     }
 
     @Test
     @WithMockUser
     void updateWine() throws Exception{
-        mockMvc.perform(put("/api/wine/13/")
-            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wine)))
-            .andExpect(jsonPath("$.id").value(13))
-            .andExpect(jsonPath("$.name").value("Deiu"))
-            .andExpect(jsonPath("$.year").value("2010"));
+        given(wineService.updateWine(1, wine)).willAnswer((invocation) -> invocation.getArguments());
+
+        ResultActions response = mockMvc.perform(put("/api/winery/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(wine)));
+
+        response.andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser
     void deleteWine() throws Exception{
-        mockMvc.perform(delete("/api/wine/18/") //Change id manually before running test...
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+        willDoNothing().given(wineService).deleteWine(wine.getId());
+
+        ResultActions response = mockMvc.perform(delete("/api/winery/{id}",wine.getId()));
+        response.andExpect(status().isOk()).andDo(print());
     }
 
     @Test
