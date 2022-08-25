@@ -6,8 +6,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.wineshop.entity.Winery;
+import com.example.wineshop.service.WineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.wineshop.entity.Region;
 import com.example.wineshop.entity.Type;
@@ -18,13 +20,21 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.hamcrest.Matchers.*;
+
+import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
-public class WineTests {
+public class WineControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private WineService wineService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -35,17 +45,21 @@ public class WineTests {
     private Wine wine = new Wine(1, "Deiu", "2010", 4.3f, 50, 78, "4", "3", winery, type, region);
 
     @Test
-    void getAll() throws Exception {
+    void retrieveAllWine() throws Exception {
         mockMvc.perform(get("/api/wine/")
             .contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @WithMockUser
-    void getOne() throws Exception {
-        mockMvc.perform(get("/api/wine/1/")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(1));
+    void retrieveWine() throws Exception {
+        given(wineService.findWine(wine.getId())).willReturn(Optional.of(wine));
+        ResultActions response = mockMvc.perform(get("/api/winery/{id}", wine.getId()));
+        
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id",is(wine.getId())))
+                .andExpect(jsonPath("$.name",is(wine.getName())));
     }
 
     @Test
