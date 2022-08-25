@@ -18,18 +18,17 @@ public class Wine {
     String name;
 
     @NotBlank
-    @YearValidation(minYear = "1900")
     String year;
 
-    @NotBlank
+    @NotNull
     @Range(min = 0, max = 5)
     float rating;
 
-    @NotBlank
+    @NotNull
     @Min(value = 0)
     int num_reviews;
 
-    @NotBlank
+    @NotNull
     @Min(value = 0)
     float price;
 
