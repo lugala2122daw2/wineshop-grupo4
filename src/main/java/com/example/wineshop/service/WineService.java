@@ -1,11 +1,14 @@
 package com.example.wineshop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.wineshop.entity.Wine;
@@ -17,8 +20,8 @@ public class WineService {
     @Autowired
     WineRepository wineRepository;
 
-    public Wine findWine(int id){
-        return wineRepository.getReferenceById(id);
+    public Optional<Wine> findWine(int id){
+        return wineRepository.findById(id);
     }
 
     public List<Wine> findWines(){
@@ -29,16 +32,21 @@ public class WineService {
         return wineRepository.save(wine);
     }
 
-    public Wine updateWine(int id, Wine nWine){
-        Wine wine = findWine(id);
-        wine.setName(nWine.getName());
-        wine.setYear(nWine.getYear());
-        wine.setRating(nWine.getRating());
-        wine.setNum_reviews(nWine.getNum_reviews());
-        wine.setPrice(nWine.getPrice());
-        wine.setBody(nWine.getBody());
-        wine.setAcidity(nWine.getAcidity());
-        return wineRepository.save(wine);
+    public ResponseEntity<Wine> updateWine(int id, Wine nWine){
+        return findWine(id)
+            .map(wine -> {
+                wine.setName(nWine.getName());
+                wine.setYear(nWine.getYear());
+                wine.setRating(nWine.getRating());
+                wine.setNum_reviews(nWine.getNum_reviews());
+                wine.setPrice(nWine.getPrice());
+                wine.setBody(nWine.getBody());
+                wine.setAcidity(nWine.getAcidity());
+                
+                wineRepository.save(wine);
+                return new ResponseEntity<>(wine, HttpStatus.OK);
+            })
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public void deleteWine(int id){

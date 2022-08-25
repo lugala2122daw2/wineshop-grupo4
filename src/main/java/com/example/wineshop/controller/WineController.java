@@ -1,16 +1,12 @@
 package com.example.wineshop.controller;
 
-import java.util.List;
+import java.util.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.wineshop.entity.Wine;
 import com.example.wineshop.service.WineService;
-import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -20,8 +16,10 @@ public class WineController {
     WineService wineService;
 
     @GetMapping("/api/wine/{id}")
-    public Wine getWine(@PathVariable int id){
-        return wineService.findWine(id);
+    public ResponseEntity<Wine> getWine(@PathVariable int id) {
+        return wineService.findWine(id)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/api/wine")
@@ -30,20 +28,20 @@ public class WineController {
     }
 
     @PostMapping("/api/wine")
-    public Wine createNewWine(@RequestBody Wine wine){
-        wineService.createWine(wine);
-        return wine;
+    public ResponseEntity<Wine> createNewWine(@RequestBody Wine wine){
+        wine.setId(0);
+        return new ResponseEntity<>(wineService.createWine(wine), HttpStatus.OK);
     }
 
     @PutMapping("/api/wine/{id}")
-    public Wine updateWine(@PathVariable int id, @RequestBody Wine nWine){
+    public ResponseEntity<Wine> updateWine(@PathVariable int id, @RequestBody Wine nWine){
         return wineService.updateWine(id, nWine);
     }
 
     @DeleteMapping("/api/wine/{id}")
-    public String deleteWine(@PathVariable int id){
+    public ResponseEntity<String> deleteWine(@PathVariable int id){
         wineService.deleteWine(id);
-        return "Se ha eliminado el vino con id: " + id;
+        return new ResponseEntity<String>("Se ha eliminado el vino con id: " + id, HttpStatus.OK);
     }
 
 }
