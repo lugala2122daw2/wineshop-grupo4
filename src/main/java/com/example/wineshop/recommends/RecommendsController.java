@@ -1,8 +1,9 @@
-/*package com.example.wineshop.recommends;
+package com.example.wineshop.recommends;
 
 
 import com.example.wineshop.entity.Wine;
-import com.example.wineshop.repository.WineRepository;
+import com.example.wineshop.service.WineService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,30 +18,38 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class RecommendsController {
-    private final WineRepository repository;
+    @Autowired
+    private WineService repository;
 
-    public RecommendsController(WineRepository repository) {
-        this.repository = repository;
-    }
-
-
-    @GetMapping("/api/recommends/best")
+    @GetMapping("/api/recommend/best")
     //Find the best wines by rating
-    public CollectionModel<EntityModel<Wine>> getBestWines(@RequestParam(required = false, defaultValue = "10") Integer limit) {
-        List<EntityModel<Wine>> wines = repository.findTop10ByOrderByRatingDesc().stream()
-                .map(wine -> EntityModel.of(wine,
-                        linkTo(methodOn(RecommendsController.class).getBestWines(limit)).withSelfRel()))
-                .collect(Collectors.toList());
-        return CollectionModel.of(wines,
-                linkTo(methodOn(RecommendsController.class).getBestWines(limit)).withSelfRel());
+    public List<Wine> getBestWines(@RequestParam(required = false, defaultValue = "10") Integer top) {
 
+        List<Wine> wines = repository.findTopNByRating(top);
+        return wines;
     }
 
-    @GetMapping("/api/recommends/expensive")
+    @GetMapping("/api/recommend/expensive")
+    public List<Wine> getExpensiveWines(@RequestParam(required = false, defaultValue = "10") Integer top) {
 
+        List<Wine> wines = repository.findTopNByExpensive(top);
+        return wines;
     }
 
-    @GetMapping("/api/recommends/bang")
+    @GetMapping("/api/recommend/bang")
+    public List<Wine> getBangWines(@RequestParam(required = false, defaultValue = "10") Integer top) {
 
+        List<Wine> wines = repository.findTopNByBang(top);
+        return wines;
     }
-}*/
+
+    @GetMapping("/api/recommend/vintage")
+    public List<Wine> getVintageWines(@RequestParam(required = false, defaultValue = "10") Integer top) {
+        //Best vintage: Years with best rated wines
+        List<Wine> wines = repository.findTopNByVintage(top);
+        return wines;
+    }
+
+
+
+}
